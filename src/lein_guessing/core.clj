@@ -1,33 +1,27 @@
 (ns lein-guessing.core)
 
 
-(def gotWrong)
-(def ranNum)
-(def won)
-
 (declare play-again)
+(declare try-parse)
 
 (defn -main
   []
-  (def gotWrong 0)
-  (def ranNum (rand-int 11))
-  (def won false)
+  (let [ranNum (rand-int 11)]
   (println "Guess a random number, from 0 to to 10!")
 
-  (while (not won)
-    (let [guess (Integer/parseInt (read-line))]
+  (loop [got-wrong 0]
+    (let [guess (try-parse)]
                (cond
                  (< guess ranNum) (do
                                     (println "That is incorrect! Guess higher!")
-                                    (def gotWrong (+ gotWrong 1)))
+                                    (recur (inc got-wrong)))
                  (> guess ranNum) (do
                                     (println "That is incorrect! Guess lower!")
-                                    (def gotWrong (+ gotWrong 1)))
+                                    (recur (inc got-wrong)))
                  :else (do
-                         (if (> gotWrong 3)
-                           (println "You guessed correctly! You got" gotWrong "wrong. You lose.")
-                           (println "You guessed correctly! You got" gotWrong "wrong. You win."))
-                         (def won true)))))
+                         (if (> got-wrong 3)
+                           (println "You guessed correctly! You got" got-wrong "wrong. You lose.")
+                           (println "You guessed correctly! You got" got-wrong "wrong. You win.")))))))
   (play-again))
 
 
@@ -41,3 +35,13 @@
       :else (do
               (println "That is not a valid answer.")
               (play-again)))))
+
+
+(defn try-parse
+  []
+  (let [x (read-line)]
+    (try
+      (Integer/parseInt x)
+      (catch NumberFormatException _ (do
+                                       (println "That is not a number!")
+                                       (try-parse))))))
