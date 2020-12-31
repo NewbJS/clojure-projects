@@ -1,6 +1,6 @@
 # lein-guessing
 
-A Clojure library designed to ... well, that part is up to you.
+Only one project so far
 
 ## Usage
 
