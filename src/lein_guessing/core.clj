@@ -3,27 +3,47 @@
 
 (declare play-again)
 (declare try-parse)
+(declare handle-hint)
 
 (defn -main
   []
-  (let [ranNum (rand-int 11)]
+  (let [ran-num (rand-int 11)]
   (println "Guess a random number, from 0 to to 10!")
 
   (loop [got-wrong 0]
+    ;(println "Do you want a hint?")
+    ;(let [want-to (read-line)]
+    ;  (if (= want-to "y")
+    ;    (show-hint ran-num)
+    ;    (println "proceeding")))
     (let [guess (try-parse)]
-               (cond
-                 (< guess ranNum) (do
-                                    (println "That is incorrect! Guess higher!")
-                                    (recur (inc got-wrong)))
-                 (> guess ranNum) (do
-                                    (println "That is incorrect! Guess lower!")
-                                    (recur (inc got-wrong)))
-                 :else (do
-                         (if (> got-wrong 3)
-                           (println "You guessed correctly! You got" got-wrong "wrong. You lose.")
-                           (println "You guessed correctly! You got" got-wrong "wrong. You win.")))))))
+
+      (cond
+        (< guess ran-num) (do
+                           (println "That is incorrect! Guess higher!")
+                           (handle-hint ran-num)
+                           (recur (inc got-wrong)))
+        (> guess ran-num) (do
+                           (println "That is incorrect! Guess lower!")
+                           (handle-hint ran-num)
+                           (recur (inc got-wrong)))
+        :else (do
+                (if (> got-wrong 3)
+                  (println "You guessed correctly! You got" got-wrong "wrong. You lose.")
+                  (println "You guessed correctly! You got" got-wrong "wrong. You win!")))))))
   (play-again))
 
+
+(defn handle-hint
+  [number]
+  (println "Do you want a hint?[y/n]")
+  (let [min (- number 2) max (+ number 2) answer (read-line)]
+    (if (= answer "y") (do
+                         (loop [narrow-num  (rand-int 11)]
+                           (if (or (< narrow-num min) (> narrow-num max))
+                             (recur (rand-int 11))
+                             (println "The random number is at least" (- narrow-num 2) "and at most" (+ narrow-num 2) "."))))
+                       (println "proceeding..."))))
 
 (defn play-again
   []
