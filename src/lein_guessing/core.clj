@@ -11,11 +11,6 @@
   (println "Guess a random number, from 0 to to 10!")
 
   (loop [got-wrong 0]
-    ;(println "Do you want a hint?")
-    ;(let [want-to (read-line)]
-    ;  (if (= want-to "y")
-    ;    (show-hint ran-num)
-    ;    (println "proceeding")))
     (let [guess (try-parse)]
 
       (cond
