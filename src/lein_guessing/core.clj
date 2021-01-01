@@ -7,20 +7,20 @@
 
 (defn -main
   []
-  (println "Do you want to enable hints?")
-  (let [ran-num (rand-int 11) wants-to-play-again (read-line)]
+  (println "Do you want to enable hints?[y/n]")
+  (let [ran-num (rand-int 11) wants-hints (read-line)]
     (println "Guess a random number, from 0 to to 10!")
     (loop [got-wrong 0]
       (let [guess (try-parse)]
         (cond
           (< guess ran-num) (do
                               (println "That is incorrect! Guess higher!")
-                              (if (= wants-to-play-again "y")
+                              (if (= wants-hints "y")
                                 (handle-hint ran-num true))
                               (recur (inc got-wrong)))
           (> guess ran-num) (do
                               (println "That is incorrect! Guess lower!")
-                              (if (= wants-to-play-again "y")
+                              (if (= wants-hints "y")
                                 (handle-hint ran-num true))
                               (recur (inc got-wrong)))
           :else (do
@@ -31,8 +31,8 @@
 
 
 (defn handle-hint
-  [number wants-to-play-again]
-  (if (= wants-to-play-again true) (do
+  [number wants-hints]
+  (if (= wants-hints true) (do
                                      (println "Do you want a hint?[y/n]")
                                      (let [min (- number 2) max (+ number 2) answer (read-line)]
                                        (if (= answer "y") (do
